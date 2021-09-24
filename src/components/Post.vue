@@ -14,14 +14,23 @@
         <router-link :to="{name: 'Post', params: { id: post.id}}">
           <a href="#" class="card-link">View Full Post</a>
         </router-link>
-
-        <a href="#" class="card-link">View Blogger</a>
+        <div v-if="account.id == post.creatorId">
+          <a href="#" class="card-link" @click="deletePost()">Delete Post</a>
+        </div>
+        <router-link :to="{name: 'Profile', params: {id: post.creatorId}}" class="selectable">
+          <img :src="post.creator.picture" class="" width="64" alt="Da Creatoooor">
+          {{ post.creator.name }}
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { computed } from '@vue/runtime-core'
+import { AppState } from '../AppState'
+import Pop from '../utils/Pop'
+import { postsService } from '../services/PostsService'
 export default {
   props: {
     post: {
@@ -30,7 +39,17 @@ export default {
     }
   },
   setup(props) {
-
+    return {
+      account: computed(() => AppState.account),
+      async deletePost() {
+        try {
+          await postsService.deletePost(props.post.id)
+          Pop.toast('this has been deleted')
+        } catch (error) {
+          Pop.toast(error, 'error')
+        }
+      }
+    }
   }
 }
 </script>
@@ -38,7 +57,7 @@ export default {
 <style>
 
 .card-boy {
-  height: 10rem;
+  height: 7rem;
 }
 
 </style>

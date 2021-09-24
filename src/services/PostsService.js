@@ -2,12 +2,13 @@ import { AppState } from '../AppState'
 import { logger } from '../utils/Logger'
 import { api } from './AxiosService'
 import { Post } from '../models/Post'
+import { convertToQuery } from '../utils/Query'
 
 class PostsService {
-  async getPosts() {
+  async getPosts(query = {}) {
     AppState.posts = []
-    // logger.log('query', query)
-    const res = await api.get('api/blogs')
+    logger.log('query', query)
+    const res = await api.get('api/blogs' + convertToQuery(query))
     logger.log('post res', res)
     AppState.posts = res.data.map(p => new Post(p))
   }
@@ -24,6 +25,12 @@ class PostsService {
     const res = await api.get(`api/blogs/${PostId}`)
     logger.log(res)
     AppState.post = new Post(res.data)
+  }
+
+  async deletePost(PostId) {
+    const res = await api.delete(`api/blogs/${PostId}`)
+    logger.log(res)
+    AppState.posts = AppState.posts.filter(p => p.id !== PostId)
   }
 }
 

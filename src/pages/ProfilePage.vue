@@ -1,10 +1,11 @@
 <template>
   <div class="container-fluid" v-if="profile">
+    <p>Hello form profile page</p>
     <div class="row" v-if="posts.length > 0">
-      <Post v-for="p in posts" :key="p.id" :post="p" />
+      <!-- <Post v-for="p in posts" :key="p.id" :post="p" /> -->
     </div>
     <div class="row" v-else>
-      <h3>No Porsts..... Very sad Much empty</h3>
+      <h3>Loading...</h3>
     </div>
   </div>
 </template>
